@@ -123,8 +123,8 @@ def resoudre(A, b, tolerance=1e-14):
         x[i] = somme / M[i][i]
     return x
 
-    A = [[1, 2, 2], [1, 2, 1], [0, 1, 2]]
-    b = [3, 4, 3]
+A = [[1, 2, 2], [1, 2, 1], [0, 1, 2]]
+b = [3, 4, 3]
 x = resoudre(A, b)
 print([round(v, 10) for v in x])
 
@@ -181,28 +181,33 @@ if np is not None:
 
 # ==== exo 6 ====
 
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    plt = None
 
-def rotation(angle):
-    c, s = np.cos(angle), np.sin(angle)
-    return np.array([[c, -s], [s, c]])
+if np is not None:
+    def rotation(angle):
+        c, s = np.cos(angle), np.sin(angle)
+        return np.array([[c, -s], [s, c]])
 
-maison = np.array([[0, 0], [2, 0], [2, 1.5], [1, 2.5], [0, 1.5], [0, 0]]).T
+    maison = np.array([[0, 0], [2, 0], [2, 1.5], [1, 2.5], [0, 1.5], [0, 0]]).T
 
-plt.figure(figsize=(5, 5))
-plt.plot(maison[0], maison[1], label="depart")
-for angle in (np.pi / 8, np.pi / 4, 3 * np.pi / 8):
-    image = rotation(angle) @ maison
-    plt.plot(image[0], image[1], label=f"rotation {int(np.degrees(angle))} degres")
-plt.axis("equal")
-plt.legend()
-plt.title("Une matrice fait tourner une figure")
-plt.show()
+    if plt is not None:
+        plt.figure(figsize=(5, 5))
+        plt.plot(maison[0], maison[1], label="depart")
+        for angle in (np.pi / 8, np.pi / 4, 3 * np.pi / 8):
+            image = rotation(angle) @ maison
+            plt.plot(image[0], image[1], label=f"rotation {int(np.degrees(angle))} degres")
+        plt.axis("equal")
+        plt.legend()
+        plt.title("Une matrice fait tourner une figure")
+        plt.show()
 
-gauche = rotation(np.pi / 4) @ rotation(np.pi / 8)
-droite = rotation(3 * np.pi / 8)
-print(np.allclose(gauche, droite))
-print(np.round(droite, 10))
+    gauche = rotation(np.pi / 4) @ rotation(np.pi / 8)
+    droite = rotation(3 * np.pi / 8)
+    print(np.allclose(gauche, droite))
+    print(np.round(droite, 10))
 
 # ==== exo 7 ====
 
@@ -226,7 +231,8 @@ def determinant(A):
     return det
 
 A = [[1, 2, 2], [1, 2, 1], [0, 1, 2]]
-print(determinant(A), float(np.linalg.det(np.array(A, dtype=float))))
+if np is not None:
+    print(determinant(A), float(np.linalg.det(np.array(A, dtype=float))))
 print(determinant([[1, 2], [2, 4]]))
 
 # ==== exo 8 ===
@@ -261,9 +267,9 @@ def rotation_h(angle):
                      [s, c, 0.0],
                      [0.0, 0.0, 1.0]])
 
-point = np.array([1.0, 0.0, 1.0])
-T = translation(3, 1)
-R = rotation_h(np.pi / 2)
-
-print(np.round(R @ T @ point, 10))   
-print(np.round(T @ R @ point, 10))   
+if np is not None:
+    point = np.array([1.0, 0.0, 1.0])
+    T = translation(3, 1)
+    R = rotation_h(np.pi / 2)
+    print(np.round(R @ T @ point, 10))
+    print(np.round(T @ R @ point, 10))
